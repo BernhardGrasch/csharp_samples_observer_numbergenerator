@@ -16,7 +16,17 @@ namespace NumberGenerator.Logic
         /// <summary>
         /// Enthält das Minimum der generierten Zahlen.
         /// </summary>
-        public int Min { get; private set; }
+        public int Min 
+        {
+            get
+            {
+                return Min;
+            }
+            private set
+            {
+                Min = 999;
+            } 
+        }
 
         /// <summary>
         /// Enthält das Maximum der generierten Zahlen.
@@ -31,7 +41,18 @@ namespace NumberGenerator.Logic
         /// <summary>
         /// Enthält den Durchschnitt der generierten Zahlen.
         /// </summary>
-        public int Avg => throw new NotImplementedException();
+        public int Avg
+        {
+            get
+            {
+                if (Count != 0)
+                {
+                    return Sum / Count;
+                }
+                return 0;
+            }
+        }
+        private int Count { get; set; }
 
         #endregion
 
@@ -53,7 +74,17 @@ namespace NumberGenerator.Logic
 
         public override void OnNextNumber(int number)
         {
-            throw new NotImplementedException();
+            Count++;
+
+            Sum += number;
+            if (number < Min)
+            {
+                Min = number;
+            }
+            if (number > Max)
+            {
+                Max = number;
+            }
         }
 
         #endregion
