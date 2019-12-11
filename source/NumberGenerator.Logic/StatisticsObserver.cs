@@ -16,17 +16,7 @@ namespace NumberGenerator.Logic
         /// <summary>
         /// Enthält das Minimum der generierten Zahlen.
         /// </summary>
-        public int Min 
-        {
-            get
-            {
-                return Min;
-            }
-            private set
-            {
-                Min = 999;
-            } 
-        }
+        public int Min { get; private set; }
 
         /// <summary>
         /// Enthält das Maximum der generierten Zahlen.
@@ -41,18 +31,8 @@ namespace NumberGenerator.Logic
         /// <summary>
         /// Enthält den Durchschnitt der generierten Zahlen.
         /// </summary>
-        public int Avg
-        {
-            get
-            {
-                if (Count != 0)
-                {
-                    return Sum / Count;
-                }
-                return 0;
-            }
-        }
-        private int Count { get; set; }
+        public int Avg => CountOfNumbersReceived > 0 ? Sum / CountOfNumbersReceived : throw new DivideByZeroException(nameof(CountOfNumbersReceived));
+        
 
         #endregion
 
@@ -60,7 +40,9 @@ namespace NumberGenerator.Logic
 
         public StatisticsObserver(IObservable numberGenerator, int countOfNumbersToWaitFor) : base(numberGenerator, countOfNumbersToWaitFor)
         {
-            throw new NotImplementedException();
+            Min = int.MaxValue;
+            Max = int.MinValue;
+            Sum = 0;
         }
 
         #endregion
@@ -69,19 +51,20 @@ namespace NumberGenerator.Logic
 
         public override string ToString()
         {
-            throw new NotImplementedException();
+            return $"BaseObserver Count of Numbers Received = '{CountOfNumbersReceived}', CountOfNumbersToWaitFor = '{CountOfNumbersToWaitFor}' -> Statistics Obserer Min = {Min}, Max = {Max}, Sum = {Sum}, Avg = {Avg}";
         }
 
         public override void OnNextNumber(int number)
         {
-            Count++;
-
+            base.OnNextNumber(number);
             Sum += number;
-            if (number < Min)
+
+            if(number < Min)
             {
                 Min = number;
             }
-            if (number > Max)
+            
+            if(number > Max)
             {
                 Max = number;
             }
